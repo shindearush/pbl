@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Exceptions Guide</title>
+    <style>
+        /* --- 1. FONTS & VARIABLES --- */
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=Fira+Code:wght@400&display=swap');
+
+        :root {
+            --bg-color: #F9F8F4;
+            --text-main: #2C2C2C;
+            --text-muted: #666;
+            --accent-color: #D4A373; 
+            
+            /* Code Theme (Dark Slate) */
+            --code-bg: #282C34;
+            --code-text: #ABB2BF;
+            --code-keyword: #C678DD; /* Purple: try, except, raise, class, pass */
+            --code-func: #61AFEF;    /* Blue: print, int, input */
+            --code-type: #E5C07B;    /* Yellow/Gold: Exception Names */
+            --code-str: #98C379;     /* Green: Strings */
+            --code-comment: #5C6370; /* Grey: Comments */
+            --code-num: #D19A66;     /* Orange: Numbers */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.8;
+            padding: 0 1.5rem 4rem 1.5rem;
+        }
+
+        /* --- 2. LAYOUT --- */
+        .container {
+            max-width: 740px;
+            margin: 0 auto;
+        }
+
+        nav {
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        nav a::before { content: '←'; margin-right: 8px; }
+
+        /* --- 3. HEADER --- */
+        header { margin-bottom: 3rem; }
+
+        .meta {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .category-pill {
+            background-color: #F2EFE9; /* Sand Color */
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #5C5C5C;
+            border: 1px solid #E0E0E0;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.2;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+        }
+
+        .author {
+            font-style: italic;
+            color: var(--text-muted);
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- 4. CONTENT --- */
+        .content { font-size: 1.1rem; }
+        .content p { margin-bottom: 1.5rem; }
+        
+        .content > p:first-of-type::first-letter {
+            float: left;
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            line-height: 0.8;
+            padding-right: 12px;
+            padding-top: 4px;
+            font-weight: 700;
+        }
+
+        /* --- 5. CODE BLOCK --- */
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 1.5rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        pre::before {
+            content: 'error_handler.py';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255,255,255,0.1);
+            color: #888;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-bottom-left-radius: 8px;
+            font-family: sans-serif;
+            text-transform: uppercase;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            white-space: pre; 
+        }
+
+        /* Syntax Highlighting Classes */
+        .kwd { color: var(--code-keyword); }
+        .func { color: var(--code-func); }
+        .str { color: var(--code-str); }
+        .com { color: var(--code-comment); font-style: italic; }
+        .num { color: var(--code-num); }
+        .type { color: var(--code-type); }
+
+        /* --- 6. FOOTER --- */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav>
+            <a href="index.html">Back to Articles</a>
+        </nav>
+
+        <article>
+            <header>
+                <div class="meta">
+                    <span class="category-pill">Error Handling</span>
+                    <span>Dec 14, 2025</span>
+                </div>
+                <h1>Mastering Control Flow: A Deep Dive into Python Custom Exceptions and Finally Blocks</h1>
+                <div class="author">By Arush Shinde</div>
+            </header>
+
+            <div class="content">
+                <p>
+                    Writing code that works is easy; writing code that fails gracefully is an art. In Python, the `try-except` block is your primary defense against unexpected crashes. But what happens when the standard errors aren't specific enough for your logic?
+                </p>
+
+                <p>
+                    In this comprehensive example, we define a custom exception called <code>NegativeNumberError</code> to enforce business logic. We then trigger a cascade of potential errors—ValueError, TypeError, and FileNotFoundError—to demonstrate how specific `except` blocks capture them. Finally, we use the <code>finally</code> block to ensure our cleanup code runs no matter what happens.
+                </p>
+
+                <pre><code><span class="com"># Defining a custom exception</span>
+<span class="kwd">class</span> <span class="type">NegativeNumberError</span>(<span class="type">Exception</span>):
+    <span class="kwd">pass</span>
+
+<span class="kwd">try</span>:
+    <span class="com"># ValueError example</span>
+    num = <span class="func">int</span>(<span class="func">input</span>(<span class="str">"Enter a positive integer: "</span>))
+    <span class="kwd">if</span> num <span class="kwd">&lt;</span> <span class="num">0</span>:
+        <span class="kwd">raise</span> <span class="type">NegativeNumberError</span>(<span class="str">"Negative numbers are not allowed"</span>)
+
+    <span class="com"># TypeError example</span>
+    a = <span class="num">10</span>
+    b = <span class="str">"5"</span>
+    c = a + b   <span class="com"># This will cause TypeError</span>
+
+    <span class="com"># FileNotFoundError example</span>
+    file = <span class="func">open</span>(<span class="str">"sample.txt"</span>, <span class="str">"r"</span>)
+    file.<span class="func">close</span>()
+
+<span class="kwd">except</span> <span class="type">ValueError</span>:
+    <span class="func">print</span>(<span class="str">"ValueError: Invalid input. Please enter an integer."</span>)
+
+<span class="kwd">except</span> <span class="type">TypeError</span>:
+    <span class="func">print</span>(<span class="str">"TypeError: Cannot perform operation between different data types."</span>)
+
+<span class="kwd">except</span> <span class="type">FileNotFoundError</span>:
+    <span class="func">print</span>(<span class="str">"FileNotFoundError: File does not exist."</span>)
+
+<span class="kwd">except</span> <span class="type">NegativeNumberError</span> <span class="kwd">as</span> e:
+    <span class="func">print</span>(<span class="str">"Custom Exception:"</span>, e)
+
+<span class="kwd">except</span> <span class="type">Exception</span> <span class="kwd">as</span> e:
+    <span class="func">print</span>(<span class="str">"Unknown Error:"</span>, e)
+
+<span class="kwd">else</span>:
+    <span class="func">print</span>(<span class="str">"Program executed successfully."</span>)
+
+<span class="kwd">finally</span>:
+    <span class="func">print</span>(<span class="str">"Execution completed."</span>)</code></pre>
+
+                <p>
+                    The beauty of this structure lies in the <code>finally</code> block. Even if the program crashes due to a TypeError on line 14, or raises our custom NegativeNumberError, the final print statement "Execution completed" will always run, ensuring resources are released.
+                </p>
+            </div>
+
+            <div class="article-footer">
+                <div class="tag-list">
+                    <span style="color:#888; margin-right:10px;">#python</span>
+                    <span style="color:#888; margin-right:10px;">#exceptions</span>
+                    <span style="color:#888; margin-right:10px;">#bestpractices</span>
+                </div>
+            </div>
+        </article>
+    </div>
+
+</body>
+</html>

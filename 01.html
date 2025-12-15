@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Data Types Guide</title>
+    <style>
+        /* --- 1. FONTS & VARIABLES --- */
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=Fira+Code:wght@400&display=swap');
+
+        :root {
+            --bg-color: #F9F8F4;
+            --text-main: #2C2C2C;
+            --text-muted: #666;
+            --accent-color: #D4A373; /* Earthy Orange */
+            
+            /* Code Theme (Dark Slate) */
+            --code-bg: #282C34;
+            --code-text: #ABB2BF;
+            --code-keyword: #C678DD; /* Purple */
+            --code-func: #61AFEF;    /* Blue */
+            --code-str: #98C379;     /* Green */
+            --code-comment: #5C6370; /* Grey */
+            --code-num: #D19A66;     /* Orange */
+            --code-type: #E5C07B;    /* Yellow */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.8;
+            padding: 0 1.5rem 4rem 1.5rem;
+        }
+
+        /* --- 2. LAYOUT --- */
+        .container {
+            max-width: 740px;
+            margin: 0 auto;
+        }
+
+        nav {
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        nav a::before { content: '←'; margin-right: 8px; }
+
+        /* --- 3. ARTICLE HEADER --- */
+        header { margin-bottom: 3rem; }
+
+        .meta {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .category-pill {
+            background-color: #E3E8E1;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #2F3E2F;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.2;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+        }
+
+        .author {
+            font-style: italic;
+            color: var(--text-muted);
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- 4. CONTENT --- */
+        .content { font-size: 1.1rem; }
+        .content p { margin-bottom: 1.5rem; }
+        
+        .content > p:first-of-type::first-letter {
+            float: left;
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            line-height: 0.8;
+            padding-right: 12px;
+            padding-top: 4px;
+            font-weight: 700;
+        }
+
+        /* --- 5. CODE BLOCK STYLING --- */
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 1.5rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        pre::before {
+            content: 'main.py';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255,255,255,0.1);
+            color: #888;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-bottom-left-radius: 8px;
+            font-family: sans-serif;
+            text-transform: uppercase;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            white-space: pre; /* Preserves exact indentation */
+        }
+
+        /* Syntax Highlighting */
+        .kwd { color: var(--code-keyword); }
+        .func { color: var(--code-func); }
+        .str { color: var(--code-str); }
+        .com { color: var(--code-comment); font-style: italic; }
+        .num { color: var(--code-num); }
+        .type { color: var(--code-type); }
+
+        /* --- 6. FOOTER --- */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav>
+            <a href="index.html">Back to Articles</a>
+        </nav>
+
+        <article>
+            <header>
+                <div class="meta">
+                    <span class="category-pill">Basics</span>
+                    <span>Dec 14, 2025</span>
+                </div>
+                <h1>Mastering the Basics: A Comprehensive Look at Python Data Types and Operations</h1>
+                <div class="author">By Arush Shinde</div>
+            </header>
+
+            <div class="content">
+                <p>
+                    Python is dynamically typed, meaning you don’t need to declare the type of a variable when you create one. This feature makes Python incredibly flexible and beginner-friendly, allowing developers to focus on logic rather than syntax verbosity.
+                </p>
+
+                <p>
+                    In the script below, we explore the four fundamental building blocks: Integers, Floats, Strings, and Booleans. We will initialize them, perform standard operations, and inspect their types at runtime.
+                </p>
+
+                <pre><code><span class="com"># Creating variables of different data types</span>
+a = <span class="num">10</span>          <span class="com"># integer</span>
+b = <span class="num">5.5</span>         <span class="com"># float</span>
+c = <span class="str">"Python"</span>    <span class="com"># string</span>
+d = <span class="kwd">True</span>        <span class="com"># boolean</span>
+
+<span class="com"># Performing basic operations</span>
+int_op = a + <span class="num">5</span>
+float_op = b * <span class="num">2</span>
+string_op = c + <span class="str">" Programming"</span>
+bool_op = <span class="kwd">not</span> d
+
+<span class="com"># Printing results with their data types</span>
+<span class="func">print</span>(<span class="str">"Integer Operation:"</span>, int_op, <span class="str">"Type:"</span>, <span class="func">type</span>(int_op))
+<span class="func">print</span>(<span class="str">"Float Operation:"</span>, float_op, <span class="str">"Type:"</span>, <span class="func">type</span>(float_op))
+<span class="func">print</span>(<span class="str">"String Operation:"</span>, string_op, <span class="str">"Type:"</span>, <span class="func">type</span>(string_op))
+<span class="func">print</span>(<span class="str">"Boolean Operation:"</span>, bool_op, <span class="str">"Type:"</span>, <span class="func">type</span>(bool_op))</code></pre>
+
+                <p>
+                    Notice how the <code>type()</code> function is used. This is an essential tool for debugging, helping you ensure that your variables are holding the data you expect them to.
+                </p>
+            </div>
+
+            <div class="article-footer">
+                <div class="tag-list">
+                    <span style="color:#888; margin-right:10px;">#python</span>
+                    <span style="color:#888; margin-right:10px;">#beginners</span>
+                </div>
+            </div>
+        </article>
+    </div>
+
+</body>
+</html>

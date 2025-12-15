@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NumPy Reshaping Guide</title>
+    <style>
+        /* --- 1. FONTS & VARIABLES --- */
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=Fira+Code:wght@400&display=swap');
+
+        :root {
+            --bg-color: #F9F8F4;
+            --text-main: #2C2C2C;
+            --text-muted: #666;
+            --accent-color: #D4A373; 
+            
+            /* Code Theme (Dark Slate) */
+            --code-bg: #282C34;
+            --code-text: #ABB2BF;
+            --code-keyword: #C678DD; /* Purple: import, as */
+            --code-func: #61AFEF;    /* Blue: array, reshape, arange, swapaxes, print */
+            --code-str: #98C379;     /* Green: Strings */
+            --code-com: #5C6370;     /* Grey: Comments */
+            --code-num: #D19A66;     /* Orange: Numbers */
+            --code-prop: #E06C75;    /* Redish: properties like .T */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.8;
+            padding: 0 1.5rem 4rem 1.5rem;
+        }
+
+        /* --- 2. LAYOUT --- */
+        .container {
+            max-width: 740px;
+            margin: 0 auto;
+        }
+
+        nav {
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        nav a::before { content: '←'; margin-right: 8px; }
+
+        /* --- 3. HEADER --- */
+        header { margin-bottom: 3rem; }
+
+        .meta {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .category-pill {
+            background-color: #E0F2F1; /* Teal */
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #00695C;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.2;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+        }
+
+        .author {
+            font-style: italic;
+            color: var(--text-muted);
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- 4. CONTENT --- */
+        .content { font-size: 1.1rem; }
+        .content p { margin-bottom: 1.5rem; }
+        
+        .content > p:first-of-type::first-letter {
+            float: left;
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            line-height: 0.8;
+            padding-right: 12px;
+            padding-top: 4px;
+            font-weight: 700;
+        }
+
+        /* --- 5. CODE BLOCK --- */
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 1.5rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        pre::before {
+            content: 'numpy_shape.py';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255,255,255,0.1);
+            color: #888;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-bottom-left-radius: 8px;
+            font-family: sans-serif;
+            text-transform: uppercase;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            white-space: pre; 
+        }
+
+        /* Syntax Highlighting Classes */
+        .kwd { color: var(--code-keyword); }
+        .func { color: var(--code-func); }
+        .str { color: var(--code-str); }
+        .com { color: var(--code-com); font-style: italic; }
+        .num { color: var(--code-num); }
+        .prop { color: var(--code-prop); }
+
+        /* --- 6. FOOTER --- */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav>
+            <a href="index.html">Back to Articles</a>
+        </nav>
+
+        <article>
+            <header>
+                <div class="meta">
+                    <span class="category-pill">Data Manipulation</span>
+                    <span>Dec 14, 2025</span>
+                </div>
+                <h1>Dimensionality Mastery: Reshaping and Transposing Data with NumPy</h1>
+                <div class="author">By Arush Shinde</div>
+            </header>
+
+            <div class="content">
+                <p>
+                    Data rarely arrives in the exact format we need. You might receive a flat list of pixels that needs to become a 2D image, or a time-series dataset that needs pivoting. NumPy excels at this structural manipulation without copying the underlying data, making it incredibly fast.
+                </p>
+                
+
+                <p>
+                    In this guide, we start with a simple 1D array and transform it into a matrix (2x3). We then explore the <strong>Transpose</strong> operation—flipping rows into columns—and finally dive into 3D space by swapping axes, a common operation when preparing image data for Neural Networks (e.g., switching from Channel-Last to Channel-First formats).
+                </p>
+
+                <pre><code><span class="kwd">import</span> numpy <span class="kwd">as</span> np
+
+<span class="com"># Create a NumPy array</span>
+arr = np.<span class="func">array</span>([<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>, <span class="num">6</span>])
+
+<span class="func">print</span>(<span class="str">"Original Array:"</span>)
+<span class="func">print</span>(arr)
+
+<span class="com"># Reshape into 2x3 matrix</span>
+reshaped = arr.<span class="func">reshape</span>(<span class="num">2</span>, <span class="num">3</span>)
+<span class="func">print</span>(<span class="str">"\nReshaped Array (2x3):"</span>)
+<span class="func">print</span>(reshaped)
+
+<span class="com"># Transpose of reshaped array</span>
+transpose_arr = reshaped.<span class="prop">T</span>
+<span class="func">print</span>(<span class="str">"\nTranspose of Reshaped Array:"</span>)
+<span class="func">print</span>(transpose_arr)
+
+<span class="com"># Create 3D array</span>
+arr3d = np.<span class="func">arange</span>(<span class="num">1</span>, <span class="num">9</span>).<span class="func">reshape</span>(<span class="num">2</span>, <span class="num">2</span>, <span class="num">2</span>)
+<span class="func">print</span>(<span class="str">"\n3D Array:"</span>)
+<span class="func">print</span>(arr3d)
+
+<span class="com"># Swap axes</span>
+swapped = np.<span class="func">swapaxes</span>(arr3d, <span class="num">0</span>, <span class="num">1</span>)
+<span class="func">print</span>(<span class="str">"\nArray after Swapping Axes (0 and 1):"</span>)
+<span class="func">print</span>(swapped)</code></pre>
+
+                <p>
+                    The <code>.reshape()</code> method is versatile but strict: the total number of elements must remain constant. Trying to reshape an array of 6 elements into a 2x4 matrix (requiring 8 slots) will result in a ValueError.
+                </p>
+            </div>
+
+            <div class="article-footer">
+                <div class="tag-list">
+                    <span style="color:#888; margin-right:10px;">#python</span>
+                    <span style="color:#888; margin-right:10px;">#numpy</span>
+                    <span style="color:#888; margin-right:10px;">#matrix</span>
+                </div>
+            </div>
+        </article>
+    </div>
+
+</body>
+</html>

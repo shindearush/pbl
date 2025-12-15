@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Inheritance Guide</title>
+    <style>
+        /* --- 1. FONTS & VARIABLES --- */
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=Fira+Code:wght@400&display=swap');
+
+        :root {
+            --bg-color: #F9F8F4;
+            --text-main: #2C2C2C;
+            --text-muted: #666;
+            --accent-color: #D4A373; 
+            
+            /* Code Theme (Dark Slate) */
+            --code-bg: #282C34;
+            --code-text: #ABB2BF;
+            --code-keyword: #C678DD; /* Purple: class, def */
+            --code-func: #61AFEF;    /* Blue: sound, bark, print */
+            --code-type: #E5C07B;    /* Yellow/Gold: Animal, Dog */
+            --code-str: #98C379;     /* Green: Strings */
+            --code-com: #5C6370;     /* Grey: Comments */
+            --code-self: #E06C75;    /* Redish: self */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.8;
+            padding: 0 1.5rem 4rem 1.5rem;
+        }
+
+        /* --- 2. LAYOUT --- */
+        .container {
+            max-width: 740px;
+            margin: 0 auto;
+        }
+
+        nav {
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        nav a::before { content: '←'; margin-right: 8px; }
+
+        /* --- 3. HEADER --- */
+        header { margin-bottom: 3rem; }
+
+        .meta {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .category-pill {
+            background-color: #E8DCCA; /* Warm Beige */
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #5C4B3F;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.2;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+        }
+
+        .author {
+            font-style: italic;
+            color: var(--text-muted);
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- 4. CONTENT --- */
+        .content { font-size: 1.1rem; }
+        .content p { margin-bottom: 1.5rem; }
+        
+        .content > p:first-of-type::first-letter {
+            float: left;
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            line-height: 0.8;
+            padding-right: 12px;
+            padding-top: 4px;
+            font-weight: 700;
+        }
+
+        /* --- 5. CODE BLOCK --- */
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 1.5rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        pre::before {
+            content: 'inheritance.py';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255,255,255,0.1);
+            color: #888;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-bottom-left-radius: 8px;
+            font-family: sans-serif;
+            text-transform: uppercase;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            white-space: pre; 
+        }
+
+        /* Syntax Highlighting Classes */
+        .kwd { color: var(--code-keyword); }
+        .func { color: var(--code-func); }
+        .str { color: var(--code-str); }
+        .com { color: var(--code-com); font-style: italic; }
+        .type { color: var(--code-type); }
+        .self { color: var(--code-self); font-style: italic; }
+
+        /* --- 6. FOOTER --- */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav>
+            <a href="index.html">Back to Articles</a>
+        </nav>
+
+        <article>
+            <header>
+                <div class="meta">
+                    <span class="category-pill">OOP Basics</span>
+                    <span>Dec 14, 2025</span>
+                </div>
+                <h1>Building Hierarchies: A Simple Guide to Class Inheritance in Python</h1>
+                <div class="author">By Arush Shinde</div>
+            </header>
+
+            <div class="content">
+                <p>
+                    One of the most powerful features of Object-Oriented Programming is <strong>Inheritance</strong>. It allows a new class (the child) to adopt the properties and methods of an existing class (the parent), promoting code reuse and logical hierarchy.
+                </p>
+                
+
+                <p>
+                    In this example, we define a base class <code>Animal</code> with a generic method. We then create a <code>Dog</code> class that inherits from <code>Animal</code>. Notice that the <code>Dog</code> object can access both its own method (<code>bark</code>) and the method from its parent (<code>sound</code>), proving the "is-a" relationship: a Dog <em>is an</em> Animal.
+                </p>
+
+                <pre><code><span class="com"># Parent class</span>
+<span class="kwd">class</span> <span class="type">Animal</span>:
+    <span class="kwd">def</span> <span class="func">sound</span>(<span class="self">self</span>):
+        <span class="func">print</span>(<span class="str">"Animal makes a sound"</span>)
+
+<span class="com"># Child class (inherits Animal)</span>
+<span class="kwd">class</span> <span class="type">Dog</span>(<span class="type">Animal</span>):
+    <span class="kwd">def</span> <span class="func">bark</span>(<span class="self">self</span>):
+        <span class="func">print</span>(<span class="str">"Dog barks"</span>)
+
+<span class="com"># Creating object of child class</span>
+d = <span class="type">Dog</span>()
+
+<span class="com"># Accessing parent class method</span>
+d.<span class="func">sound</span>()
+
+<span class="com"># Accessing child class method</span>
+d.<span class="func">bark</span>()</code></pre>
+
+                <p>
+                    This mechanism allows developers to build complex systems by starting with general concepts and specializing them into specific implementations, reducing redundancy across the codebase.
+                </p>
+            </div>
+
+            <div class="article-footer">
+                <div class="tag-list">
+                    <span style="color:#888; margin-right:10px;">#python</span>
+                    <span style="color:#888; margin-right:10px;">#inheritance</span>
+                    <span style="color:#888; margin-right:10px;">#oop</span>
+                </div>
+            </div>
+        </article>
+    </div>
+
+</body>
+</html>

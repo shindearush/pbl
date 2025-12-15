@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NumPy Indexing Guide</title>
+    <style>
+        /* --- 1. FONTS & VARIABLES --- */
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=Fira+Code:wght@400&display=swap');
+
+        :root {
+            --bg-color: #F9F8F4;
+            --text-main: #2C2C2C;
+            --text-muted: #666;
+            --accent-color: #D4A373; 
+            
+            /* Code Theme (Dark Slate) */
+            --code-bg: #282C34;
+            --code-text: #ABB2BF;
+            --code-keyword: #C678DD; /* Purple: import, as */
+            --code-func: #61AFEF;    /* Blue: array, print */
+            --code-str: #98C379;     /* Green: Strings */
+            --code-com: #5C6370;     /* Grey: Comments */
+            --code-num: #D19A66;     /* Orange: Numbers */
+            --code-slice: #E5C07B;   /* Yellow/Gold: Slicing colons and brackets */
+            --code-bool: #E06C75;    /* Red: Boolean conditions */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.8;
+            padding: 0 1.5rem 4rem 1.5rem;
+        }
+
+        /* --- 2. LAYOUT --- */
+        .container {
+            max-width: 740px;
+            margin: 0 auto;
+        }
+
+        nav {
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        nav a::before { content: '←'; margin-right: 8px; }
+
+        /* --- 3. HEADER --- */
+        header { margin-bottom: 3rem; }
+
+        .meta {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .category-pill {
+            background-color: #E3F2FD; /* Light Blue */
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #1565C0;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.2;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+        }
+
+        .author {
+            font-style: italic;
+            color: var(--text-muted);
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- 4. CONTENT --- */
+        .content { font-size: 1.1rem; }
+        .content p { margin-bottom: 1.5rem; }
+        
+        .content > p:first-of-type::first-letter {
+            float: left;
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            line-height: 0.8;
+            padding-right: 12px;
+            padding-top: 4px;
+            font-weight: 700;
+        }
+
+        /* --- 5. CODE BLOCK --- */
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 1.5rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        pre::before {
+            content: 'numpy_slicing.py';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255,255,255,0.1);
+            color: #888;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-bottom-left-radius: 8px;
+            font-family: sans-serif;
+            text-transform: uppercase;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            white-space: pre; 
+        }
+
+        /* Syntax Highlighting Classes */
+        .kwd { color: var(--code-keyword); }
+        .func { color: var(--code-func); }
+        .str { color: var(--code-str); }
+        .com { color: var(--code-com); font-style: italic; }
+        .num { color: var(--code-num); }
+        .slice { color: var(--code-slice); }
+        .bool { color: var(--code-bool); }
+
+        /* --- 6. FOOTER --- */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav>
+            <a href="index.html">Back to Articles</a>
+        </nav>
+
+        <article>
+            <header>
+                <div class="meta">
+                    <span class="category-pill">Data Analysis</span>
+                    <span>Dec 14, 2025</span>
+                </div>
+                <h1>Precision Extraction: A Deep Dive into NumPy Indexing and Slicing</h1>
+                <div class="author">By Arush Shinde</div>
+            </header>
+
+            <div class="content">
+                <p>
+                    Loading data is only the first step; the real work begins when you need to extract specific insights. Whether you are cropping an image, filtering out outliers, or selecting a specific time window, NumPy's indexing capabilities provide the surgical precision required for the job.
+                </p>
+                
+
+                <p>
+                    Unlike standard Python lists, NumPy supports slicing across multiple dimensions simultaneously using the syntax <code>[row_start:row_end, col_start:col_end]</code>.
+                </p>
+
+                <p>
+                    In the code below, we explore three powerful techniques:
+                    <br>1. <strong>Slicing:</strong> Using the colon <code>:</code> to select ranges.
+                    <br>2. <strong>Boolean Indexing:</strong> Filtering data based on a condition (e.g., <code>arr > 50</code>).
+                    <br>3. <strong>Fancy Indexing:</strong> Selecting arbitrary items using arrays of indices.
+                </p>
+
+                <pre><code><span class="kwd">import</span> numpy <span class="kwd">as</span> np
+
+<span class="com"># Create a 2D NumPy array</span>
+arr = np.<span class="func">array</span>([[<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>],
+                [<span class="num">40</span>, <span class="num">50</span>, <span class="num">60</span>],
+                [<span class="num">70</span>, <span class="num">80</span>, <span class="num">90</span>]])
+
+<span class="func">print</span>(<span class="str">"Original Array:\n"</span>, arr)
+
+<span class="com"># 🔹 Accessing specific elements</span>
+<span class="func">print</span>(<span class="str">"\nElement at (0,1):"</span>, arr[<span class="num">0</span>, <span class="num">1</span>])
+
+<span class="com"># 🔹 Accessing rows</span>
+<span class="func">print</span>(<span class="str">"\nFirst row:"</span>, arr[<span class="num">0</span>])
+<span class="func">print</span>(<span class="str">"Second row:"</span>, arr[<span class="num">1</span>])
+
+<span class="com"># 🔹 Accessing columns</span>
+<span class="func">print</span>(<span class="str">"\nFirst column:"</span>, arr[<span class="slice">:</span>, <span class="num">0</span>])
+<span class="func">print</span>(<span class="str">"Second column:"</span>, arr[<span class="slice">:</span>, <span class="num">1</span>])
+
+<span class="com"># 🔹 Slicing (subarray)</span>
+<span class="func">print</span>(<span class="str">"\nSubarray (first 2 rows, first 2 columns):"</span>)
+<span class="func">print</span>(arr[<span class="num">0</span><span class="slice">:</span><span class="num">2</span>, <span class="num">0</span><span class="slice">:</span><span class="num">2</span>])
+
+<span class="com"># 🔹 Boolean indexing</span>
+<span class="func">print</span>(<span class="str">"\nElements greater than 50:"</span>)
+<span class="func">print</span>(arr[<span class="bool">arr > 50</span>])
+
+<span class="com"># 🔹 Fancy indexing</span>
+<span class="func">print</span>(<span class="str">"\nFancy indexing (rows 0 and 2, columns 1 and 2):"</span>)
+<span class="func">print</span>(arr[[<span class="num">0</span>, <span class="num">2</span>], [<span class="num">1</span>, <span class="num">2</span>]])</code></pre>
+
+                <p>
+                    Boolean indexing is particularly powerful for cleaning data. Instead of writing a loop to check every number, you pass a condition mask to the array, and NumPy returns a new array containing only the elements that satisfy that condition—instantly.
+                </p>
+            </div>
+
+            <div class="article-footer">
+                <div class="tag-list">
+                    <span style="color:#888; margin-right:10px;">#python</span>
+                    <span style="color:#888; margin-right:10px;">#numpy</span>
+                    <span style="color:#888; margin-right:10px;">#dataanalysis</span>
+                </div>
+            </div>
+        </article>
+    </div>
+
+</body>
+</html>

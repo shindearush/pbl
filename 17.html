@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pandas Missing Data Guide</title>
+    <style>
+        /* --- 1. FONTS & VARIABLES --- */
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=Fira+Code:wght@400&display=swap');
+
+        :root {
+            --bg-color: #F9F8F4;
+            --text-main: #2C2C2C;
+            --text-muted: #666;
+            --accent-color: #D4A373; 
+            
+            /* Code Theme (Dark Slate) */
+            --code-bg: #282C34;
+            --code-text: #ABB2BF;
+            --code-keyword: #C678DD; /* Purple: import, as, print */
+            --code-func: #61AFEF;    /* Blue: DataFrame, fillna, dropna, sum, mean */
+            --code-str: #98C379;     /* Green: Strings */
+            --code-com: #5C6370;     /* Grey: Comments */
+            --code-num: #D19A66;     /* Orange: Numbers */
+            --code-obj: #E5C07B;     /* Gold: pd, df, np */
+            --code-nan: #E06C75;     /* Red: NaN (Missing Values) */
+            --code-key: #E06C75;     /* Red: Dictionary Keys */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.8;
+            padding: 0 1.5rem 4rem 1.5rem;
+        }
+
+        /* --- 2. LAYOUT --- */
+        .container {
+            max-width: 740px;
+            margin: 0 auto;
+        }
+
+        nav {
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        nav a::before { content: '←'; margin-right: 8px; }
+
+        /* --- 3. HEADER --- */
+        header { margin-bottom: 3rem; }
+
+        .meta {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .category-pill {
+            background-color: #FFEBEE; /* Light Red/Pink */
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #C62828;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.2;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+        }
+
+        .author {
+            font-style: italic;
+            color: var(--text-muted);
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- 4. CONTENT --- */
+        .content { font-size: 1.1rem; }
+        .content p { margin-bottom: 1.5rem; }
+        
+        .content > p:first-of-type::first-letter {
+            float: left;
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            line-height: 0.8;
+            padding-right: 12px;
+            padding-top: 4px;
+            font-weight: 700;
+        }
+
+        /* --- 5. CODE BLOCK --- */
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 1.5rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        pre::before {
+            content: 'pandas_missing.py';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255,255,255,0.1);
+            color: #888;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-bottom-left-radius: 8px;
+            font-family: sans-serif;
+            text-transform: uppercase;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            white-space: pre; 
+        }
+
+        /* Syntax Highlighting Classes */
+        .kwd { color: var(--code-keyword); }
+        .func { color: var(--code-func); }
+        .str { color: var(--code-str); }
+        .com { color: var(--code-com); font-style: italic; }
+        .num { color: var(--code-num); }
+        .obj { color: var(--code-obj); }
+        .nan { color: var(--code-nan); font-weight: bold; }
+        .key { color: var(--code-key); }
+
+        /* --- 6. FOOTER --- */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav>
+            <a href="index.html">Back to Articles</a>
+        </nav>
+
+        <article>
+            <header>
+                <div class="meta">
+                    <span class="category-pill">Data Cleaning</span>
+                    <span>Dec 14, 2025</span>
+                </div>
+                <h1>Mind the Gap: Handling Missing Values with Pandas</h1>
+                <div class="author">By Arush Shinde</div>
+            </header>
+
+            <div class="content">
+                <p>
+                    Real-world data is rarely perfect. Sensors fail, surveys get skipped, and systems crash, leaving your datasets full of holes. In Pandas, these missing values are represented as <code>NaN</code> (Not a Number). If you attempt to calculate statistics on a dataset filled with NaNs without handling them, your results can be misleading or result in errors.
+                </p>
+                
+
+                <p>
+                    Data Scientists generally have two main strategies for this: <strong>Imputation</strong> (filling the gaps) or <strong>Deletion</strong> (removing the broken records).
+                </p>
+                
+                <p>
+                    In the code below, we simulate missing data using NumPy's <code>np.nan</code>. We then explore <code>fillna(0)</code>, which replaces every gap with a zero—useful for things like sales data where a missing record implies no sale. Alternatively, we show <code>dropna()</code>, the "nuclear option" that discards any row containing even a single missing value.
+                </p>
+
+                <pre><code><span class="kwd">import</span> pandas <span class="kwd">as</span> pd
+<span class="kwd">import</span> numpy <span class="kwd">as</span> np
+
+<span class="com"># Create DataFrame with missing values (np.nan)</span>
+data = {
+    <span class="key">"Name"</span>: [<span class="str">"Arush"</span>, <span class="str">"Riya"</span>, <span class="str">"Amit"</span>, <span class="str">"Neha"</span>],
+    <span class="key">"Marks1"</span>: [<span class="num">85</span>, <span class="obj">np</span>.<span class="nan">nan</span>, <span class="num">78</span>, <span class="num">90</span>],
+    <span class="key">"Marks2"</span>: [<span class="num">80</span>, <span class="num">88</span>, <span class="obj">np</span>.<span class="nan">nan</span>, <span class="num">92</span>]
+}
+
+df = <span class="obj">pd</span>.<span class="func">DataFrame</span>(data)
+
+<span class="kwd">print</span>(<span class="str">"Original DataFrame:"</span>)
+<span class="kwd">print</span>(df)
+
+<span class="com"># 🔹 Handling missing values using fillna()</span>
+df_filled = df.<span class="func">fillna</span>(<span class="num">0</span>)
+<span class="kwd">print</span>(<span class="str">"\nDataFrame after fillna():"</span>)
+<span class="kwd">print</span>(df_filled)
+
+<span class="com"># 🔹 Handling missing values using dropna()</span>
+df_dropped = df.<span class="func">dropna</span>()
+<span class="kwd">print</span>(<span class="str">"\nDataFrame after dropna():"</span>)
+<span class="kwd">print</span>(df_dropped)
+
+<span class="com"># 🔹 Aggregation operations on the filled data</span>
+<span class="kwd">print</span>(<span class="str">"\nAggregation Operations:"</span>)
+<span class="kwd">print</span>(<span class="str">"Sum of Marks1:"</span>, df_filled[<span class="str">"Marks1"</span>].<span class="func">sum</span>())
+<span class="kwd">print</span>(<span class="str">"Mean of Marks1:"</span>, df_filled[<span class="str">"Marks1"</span>].<span class="func">mean</span>())
+
+<span class="kwd">print</span>(<span class="str">"Sum of Marks2:"</span>, df_filled[<span class="str">"Marks2"</span>].<span class="func">sum</span>())
+<span class="kwd">print</span>(<span class="str">"Mean of Marks2:"</span>, df_filled[<span class="str">"Marks2"</span>].<span class="func">mean</span>())</code></pre>
+
+                <p>
+                    Choosing between these methods depends on your domain. If you are calculating the average score of a class, filling a missing test score with 0 penalizes the student (which might be correct if they skipped it). However, dropping the student entirely excludes them from the analysis.
+                </p>
+            </div>
+
+            <div class="article-footer">
+                <div class="tag-list">
+                    <span style="color:#888; margin-right:10px;">#python</span>
+                    <span style="color:#888; margin-right:10px;">#pandas</span>
+                    <span style="color:#888; margin-right:10px;">#datacleaning</span>
+                </div>
+            </div>
+        </article>
+    </div>
+
+</body>
+</html>
