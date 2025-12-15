@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Arrays Guide</title>
+    <style>
+        /* --- 1. FONTS & VARIABLES --- */
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=Fira+Code:wght@400&display=swap');
+
+        :root {
+            --bg-color: #F9F8F4;
+            --text-main: #2C2C2C;
+            --text-muted: #666;
+            --accent-color: #D4A373; 
+            
+            /* Code Theme (Dark Slate) */
+            --code-bg: #282C34;
+            --code-text: #ABB2BF;
+            --code-keyword: #C678DD; /* Purple: import, for, if, else */
+            --code-func: #61AFEF;    /* Blue: print, append, remove */
+            --code-str: #98C379;     /* Green: Strings */
+            --code-comment: #5C6370; /* Grey: Comments */
+            --code-num: #D19A66;     /* Orange: Numbers */
+            --code-type: #E5C07B;    /* Yellow: 'i' type code */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.8;
+            padding: 0 1.5rem 4rem 1.5rem;
+        }
+
+        /* --- 2. LAYOUT --- */
+        .container {
+            max-width: 740px;
+            margin: 0 auto;
+        }
+
+        nav {
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        nav a::before { content: '←'; margin-right: 8px; }
+
+        /* --- 3. HEADER --- */
+        header { margin-bottom: 3rem; }
+
+        .meta {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .category-pill {
+            background-color: #D0E1E8; /* Light Blue for Tech/Data */
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #2F3E4F;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.2;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+        }
+
+        .author {
+            font-style: italic;
+            color: var(--text-muted);
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- 4. CONTENT --- */
+        .content { font-size: 1.1rem; }
+        .content p { margin-bottom: 1.5rem; }
+        
+        .content > p:first-of-type::first-letter {
+            float: left;
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            line-height: 0.8;
+            padding-right: 12px;
+            padding-top: 4px;
+            font-weight: 700;
+        }
+
+        /* --- 5. CODE BLOCK --- */
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 1.5rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        pre::before {
+            content: 'arrays.py';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255,255,255,0.1);
+            color: #888;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-bottom-left-radius: 8px;
+            font-family: sans-serif;
+            text-transform: uppercase;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            white-space: pre; 
+        }
+
+        /* Syntax Highlighting Classes */
+        .kwd { color: var(--code-keyword); }
+        .func { color: var(--code-func); }
+        .str { color: var(--code-str); }
+        .com { color: var(--code-comment); font-style: italic; }
+        .num { color: var(--code-num); }
+        .type { color: var(--code-type); }
+
+        /* --- 6. FOOTER --- */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav>
+            <a href="index.html">Back to Articles</a>
+        </nav>
+
+        <article>
+            <header>
+                <div class="meta">
+                    <span class="category-pill">Data Structures</span>
+                    <span>Oct 22, 2024</span>
+                </div>
+                <h1>Beyond Lists: Efficient Data Storage with Python Arrays</h1>
+                <div class="author">By Code Daily</div>
+            </header>
+
+            <div class="content">
+                <p>
+                    While Python lists are incredibly versatile, they aren't always the most memory-efficient choice for storing large amounts of numerical data. This is where the <code>array</code> module comes in. Unlike lists, arrays in Python are constrained to a single data type, making them more compact and faster for certain operations.
+                </p>
+
+                <p>
+                    In this example, we demonstrate the lifecycle of an array: creation, modification (insertion/deletion), searching, and iteration. Note the use of the type code <code>'i'</code>, which specifies that this array will strictly contain signed integers.
+                </p>
+
+                <pre><code><span class="com"># Import array module</span>
+<span class="kwd">import</span> array
+<span class="kwd">import</span> time
+
+<span class="com"># Creating an array of integers</span>
+arr = array.array(<span class="str">'i'</span>, [<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>, <span class="num">40</span>, <span class="num">50</span>])
+<span class="func">print</span>(<span class="str">"Original Array:"</span>, arr)
+
+<span class="com"># 🔹 Insertion</span>
+arr.<span class="func">append</span>(<span class="num">60</span>)
+<span class="func">print</span>(<span class="str">"After Insertion:"</span>, arr)
+
+<span class="com"># 🔹 Deletion</span>
+arr.<span class="func">remove</span>(<span class="num">30</span>)
+<span class="func">print</span>(<span class="str">"After Deletion:"</span>, arr)
+
+<span class="com"># 🔹 Searching</span>
+search = <span class="num">40</span>
+<span class="kwd">if</span> search <span class="kwd">in</span> arr:
+    <span class="func">print</span>(search, <span class="str">"found at index"</span>, arr.<span class="func">index</span>(search))
+<span class="kwd">else</span>:
+    <span class="func">print</span>(search, <span class="str">"not found"</span>)
+
+<span class="com"># 🔹 Iterating through array</span>
+<span class="func">print</span>(<span class="str">"Iterating through array:"</span>)
+<span class="kwd">for</span> element <span class="kwd">in</span> arr:
+    <span class="func">print</span>(element)</code></pre>
+
+                <p>
+                    This approach provides a glimpse into lower-level memory management while maintaining Python's readable syntax. It is particularly useful when interfacing with C libraries or handling large datasets where performance is critical.
+                </p>
+            </div>
+
+            <div class="article-footer">
+                <div class="tag-list">
+                    <span style="color:#888; margin-right:10px;">#python</span>
+                    <span style="color:#888; margin-right:10px;">#arrays</span>
+                    <span style="color:#888; margin-right:10px;">#optimization</span>
+                </div>
+            </div>
+        </article>
+    </div>
+
+</body>
+</html>

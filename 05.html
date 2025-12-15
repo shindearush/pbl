@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python OOP Guide</title>
+    <style>
+        /* --- 1. FONTS & VARIABLES --- */
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=Fira+Code:wght@400&display=swap');
+
+        :root {
+            --bg-color: #F9F8F4;
+            --text-main: #2C2C2C;
+            --text-muted: #666;
+            --accent-color: #D4A373; 
+            
+            /* Code Theme (Dark Slate) */
+            --code-bg: #282C34;
+            --code-text: #ABB2BF;
+            --code-keyword: #C678DD; /* Purple: class, def */
+            --code-func: #61AFEF;    /* Blue: __init__, display, print */
+            --code-type: #E5C07B;    /* Yellow/Gold: Student */
+            --code-str: #98C379;     /* Green: Strings */
+            --code-com: #5C6370;     /* Grey: Comments */
+            --code-num: #D19A66;     /* Orange: Numbers */
+            --code-self: #E06C75;    /* Redish: self parameter */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.8;
+            padding: 0 1.5rem 4rem 1.5rem;
+        }
+
+        /* --- 2. LAYOUT --- */
+        .container {
+            max-width: 740px;
+            margin: 0 auto;
+        }
+
+        nav {
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        nav a::before { content: '←'; margin-right: 8px; }
+
+        /* --- 3. HEADER --- */
+        header { margin-bottom: 3rem; }
+
+        .meta {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .category-pill {
+            background-color: #E8DCCA; /* Warm Beige */
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #5C4B3F;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.2;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+        }
+
+        .author {
+            font-style: italic;
+            color: var(--text-muted);
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- 4. CONTENT --- */
+        .content { font-size: 1.1rem; }
+        .content p { margin-bottom: 1.5rem; }
+        
+        .content > p:first-of-type::first-letter {
+            float: left;
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            line-height: 0.8;
+            padding-right: 12px;
+            padding-top: 4px;
+            font-weight: 700;
+        }
+
+        /* --- 5. CODE BLOCK --- */
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 1.5rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        pre::before {
+            content: 'classes.py';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255,255,255,0.1);
+            color: #888;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-bottom-left-radius: 8px;
+            font-family: sans-serif;
+            text-transform: uppercase;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            white-space: pre; 
+        }
+
+        /* Syntax Highlighting Classes */
+        .kwd { color: var(--code-keyword); }
+        .func { color: var(--code-func); }
+        .str { color: var(--code-str); }
+        .com { color: var(--code-com); font-style: italic; }
+        .num { color: var(--code-num); }
+        .type { color: var(--code-type); }
+        .self { color: var(--code-self); font-style: italic; }
+
+        /* --- 6. FOOTER --- */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav>
+            <a href="index.html">Back to Articles</a>
+        </nav>
+
+        <article>
+            <header>
+                <div class="meta">
+                    <span class="category-pill">OOP Concepts</span>
+                    <span>Nov 12, 2024</span>
+                </div>
+                <h1>The Blueprint of Code: Understanding Classes and Objects in Python</h1>
+                <div class="author">By Code Daily</div>
+            </header>
+
+            <div class="content">
+                <p>
+                    Object-Oriented Programming (OOP) allows us to structure programs so that properties and behaviors are bundled into individual objects. Think of a <strong>Class</strong> as a blueprint (like an architect's drawing), and an <strong>Object</strong> as the actual house built from that blueprint.
+                </p>
+                
+
+[Image of class vs object diagram]
+
+
+                <p>
+                    In the code below, we define a <code>Student</code> class. The <code>__init__</code> method acts as a constructor—it initializes the object's attributes (Name, Roll No, Marks) the moment an object is created. We then define a custom method, <code>display()</code>, to print these details.
+                </p>
+
+                <pre><code><span class="com"># Defining a class</span>
+<span class="kwd">class</span> <span class="type">Student</span>:
+    
+    <span class="com"># Constructor</span>
+    <span class="kwd">def</span> <span class="func">__init__</span>(<span class="self">self</span>, name, roll_no, marks):
+        <span class="self">self</span>.name = name
+        <span class="self">self</span>.roll_no = roll_no
+        <span class="self">self</span>.marks = marks
+
+    <span class="com"># Method to display student details</span>
+    <span class="kwd">def</span> <span class="func">display</span>(<span class="self">self</span>):
+        <span class="func">print</span>(<span class="str">"Name:"</span>, <span class="self">self</span>.name)
+        <span class="func">print</span>(<span class="str">"Roll No:"</span>, <span class="self">self</span>.roll_no)
+        <span class="func">print</span>(<span class="str">"Marks:"</span>, <span class="self">self</span>.marks)
+
+<span class="com"># Creating object of the class</span>
+s1 = <span class="type">Student</span>(<span class="str">"Arush"</span>, <span class="num">101</span>, <span class="num">85</span>)
+
+<span class="com"># Calling method</span>
+s1.<span class="func">display</span>()</code></pre>
+
+                <p>
+                    Notice the use of <code>self</code>. In Python, <code>self</code> represents the specific instance of the class. It allows each student object (e.g., <code>s1</code>, <code>s2</code>) to maintain its own unique data without interfering with others.
+                </p>
+            </div>
+
+            <div class="article-footer">
+                <div class="tag-list">
+                    <span style="color:#888; margin-right:10px;">#python</span>
+                    <span style="color:#888; margin-right:10px;">#oop</span>
+                    <span style="color:#888; margin-right:10px;">#classes</span>
+                </div>
+            </div>
+        </article>
+    </div>
+
+</body>
+</html>

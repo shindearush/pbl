@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pandas Filtering Guide</title>
+    <style>
+        /* --- 1. FONTS & VARIABLES --- */
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=Fira+Code:wght@400&display=swap');
+
+        :root {
+            --bg-color: #F9F8F4;
+            --text-main: #2C2C2C;
+            --text-muted: #666;
+            --accent-color: #D4A373; 
+            
+            /* Code Theme (Dark Slate) */
+            --code-bg: #282C34;
+            --code-text: #ABB2BF;
+            --code-keyword: #C678DD; /* Purple: import, as, print */
+            --code-func: #61AFEF;    /* Blue: DataFrame, query, sort_values */
+            --code-str: #98C379;     /* Green: Strings */
+            --code-com: #5C6370;     /* Grey: Comments */
+            --code-num: #D19A66;     /* Orange: Numbers */
+            --code-obj: #E5C07B;     /* Gold: pd, df */
+            --code-arg: #D19A66;     /* Orange/Beige: Arguments like ascending, by */
+            --code-key: #E06C75;     /* Red: Dictionary Keys */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.8;
+            padding: 0 1.5rem 4rem 1.5rem;
+        }
+
+        /* --- 2. LAYOUT --- */
+        .container {
+            max-width: 740px;
+            margin: 0 auto;
+        }
+
+        nav {
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        nav a::before { content: '←'; margin-right: 8px; }
+
+        /* --- 3. HEADER --- */
+        header { margin-bottom: 3rem; }
+
+        .meta {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .category-pill {
+            background-color: #E0F7FA; /* Cyan */
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #006064;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.2;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+        }
+
+        .author {
+            font-style: italic;
+            color: var(--text-muted);
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- 4. CONTENT --- */
+        .content { font-size: 1.1rem; }
+        .content p { margin-bottom: 1.5rem; }
+        
+        .content > p:first-of-type::first-letter {
+            float: left;
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            line-height: 0.8;
+            padding-right: 12px;
+            padding-top: 4px;
+            font-weight: 700;
+        }
+
+        /* --- 5. CODE BLOCK --- */
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 1.5rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        pre::before {
+            content: 'pandas_filter.py';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255,255,255,0.1);
+            color: #888;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-bottom-left-radius: 8px;
+            font-family: sans-serif;
+            text-transform: uppercase;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            white-space: pre; 
+        }
+
+        /* Syntax Highlighting Classes */
+        .kwd { color: var(--code-keyword); }
+        .func { color: var(--code-func); }
+        .str { color: var(--code-str); }
+        .com { color: var(--code-com); font-style: italic; }
+        .num { color: var(--code-num); }
+        .obj { color: var(--code-obj); }
+        .arg { color: var(--code-arg); }
+        .key { color: var(--code-key); }
+
+        /* --- 6. FOOTER --- */
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav>
+            <a href="index.html">Back to Articles</a>
+        </nav>
+
+        <article>
+            <header>
+                <div class="meta">
+                    <span class="category-pill">Data Manipulation</span>
+                    <span>Jan 05, 2025</span>
+                </div>
+                <h1>Finding the Signal: Filtering and Sorting Data with Pandas</h1>
+                <div class="author">By Code Daily</div>
+            </header>
+
+            <div class="content">
+                <p>
+                    Analyzing data often feels like searching for a needle in a haystack. You rarely need the entire dataset; instead, you need to extract specific rows that meet certain criteria—like high-performing students, recent transactions, or critical errors.
+                </p>
+                
+
+                <p>
+                    In this guide, we explore two ways to filter data. The first is <strong>Boolean Indexing</strong>, the classic approach where we pass a condition (True/False mask) to the DataFrame. The second is the <code>query()</code> method, which allows for cleaner, SQL-like syntax that is often easier to read.
+                </p>
+
+                <p>
+                    Finally, we demonstrate <code>sort_values()</code>. Data is most useful when ordered—whether you are creating a leaderboard or organizing events chronologically.
+                </p>
+
+                <pre><code><span class="kwd">import</span> pandas <span class="kwd">as</span> pd
+
+<span class="com"># Create DataFrame</span>
+data = {
+    <span class="key">"Name"</span>: [<span class="str">"Arush"</span>, <span class="str">"Riya"</span>, <span class="str">"Amit"</span>, <span class="str">"Neha"</span>, <span class="str">"Rahul"</span>],
+    <span class="key">"Marks"</span>: [<span class="num">85</span>, <span class="num">90</span>, <span class="num">72</span>, <span class="num">88</span>, <span class="num">95</span>],
+    <span class="key">"Age"</span>: [<span class="num">20</span>, <span class="num">21</span>, <span class="num">19</span>, <span class="num">20</span>, <span class="num">22</span>]
+}
+
+df = <span class="obj">pd</span>.<span class="func">DataFrame</span>(data)
+
+<span class="kwd">print</span>(<span class="str">"Original DataFrame:"</span>)
+<span class="kwd">print</span>(df)
+
+<span class="com"># 🔹 Filtering using Boolean Indexing</span>
+filtered_df = df[df[<span class="str">"Marks"</span>] > <span class="num">85</span>]
+<span class="kwd">print</span>(<span class="str">"\nStudents with Marks > 85:"</span>)
+<span class="kwd">print</span>(filtered_df)
+
+<span class="com"># 🔹 Filtering using query() method</span>
+query_df = df.<span class="func">query</span>(<span class="str">"Marks > 85"</span>)
+<span class="kwd">print</span>(<span class="str">"\nFiltered using query():"</span>)
+<span class="kwd">print</span>(query_df)
+
+<span class="com"># 🔹 Sorting the filtered DataFrame by Marks</span>
+sorted_df = filtered_df.<span class="func">sort_values</span>(<span class="arg">by</span>=<span class="str">"Marks"</span>, <span class="arg">ascending</span>=<span class="kwd">False</span>)
+<span class="kwd">print</span>(<span class="str">"\nSorted DataFrame by Marks (Descending):"</span>)
+<span class="kwd">print</span>(sorted_df)</code></pre>
+
+                <p>
+                    While <code>df[df["Col"] > 5]</code> is powerful, the code can get messy with multiple conditions (e.g., using <code>&</code> for AND, <code>|</code> for OR). In those complex cases, <code>df.query("Col > 5 and Age < 30")</code> often shines by keeping your code readable and expressive.
+                </p>
+            </div>
+
+            <div class="article-footer">
+                <div class="tag-list">
+                    <span style="color:#888; margin-right:10px;">#python</span>
+                    <span style="color:#888; margin-right:10px;">#pandas</span>
+                    <span style="color:#888; margin-right:10px;">#dataanalysis</span>
+                </div>
+            </div>
+        </article>
+    </div>
+
+</body>
+</html>
